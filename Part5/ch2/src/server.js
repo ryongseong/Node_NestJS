@@ -1,17 +1,19 @@
+// requirement
 const express = require('express');
 const path = require('path');
-const User = require('./models/users.model.js');
 const {default : mongoose} = require('mongoose');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
-const { checkAuthenticated, checkNotAuthenticated } = require('./middlewares/auth.js');
-require('./config/passport');
+const config = require('config');
+const mainRouter = require('./routers/main.router');
+const usersRouter = require('./routers/users.router');
 
+require('./config/passport');
+require('dotenv').config()
 
 const app = express();
-const PORT = 4000;
-const uri = "mongodb://capstone:project1234!@ac-jnkgv1e-shard-00-00.yibtxfu.mongodb.net:27017,ac-jnkgv1e-shard-00-01.yibtxfu.mongodb.net:27017,ac-jnkgv1e-shard-00-02.yibtxfu.mongodb.net:27017/?ssl=true&replicaSet=atlas-7l2387-shard-0&authSource=admin&retryWrites=true&w=majority"
-const cookieEncryptionKey = 'super-secret-key';
+const serverConfig = config.get('server');
+const port = serverConfig.port;
 
 mongoose.set("strictQuery", false);
 
@@ -21,7 +23,7 @@ app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use(
     cookieSession({
         name: 'cookie-session-name',
-        keys: [cookieEncryptionKey]
+        keys: [process.env.COOKIE_ENCRYPTION_KEY]
     })
     );
 app.use(passport.initialize());
@@ -49,62 +51,15 @@ dbConnect()
   .then(()=>console.log("mongodb connected"))
   .catch(err => console.log(err));
 async function dbConnect() {
-  await mongoose.connect(uri);
+  await mongoose.connect(process.env.MONGO_URI);
 }
 
-app.get('/', checkAuthenticated, function (req, res, next) {
-    res.render('index');
-})
+app.use('/', mainRouter);
 
-app.get('/login', checkNotAuthenticated, (req, res) => {
-    res.render('login');
-})
-
-app.get('/signup', checkNotAuthenticated, (req, res) => {
-    res.render('signup');
-})
-
-app.post('/signup', async (req, res) => {
-    // user 객체 생성
-    const user = new User(req.body);
-
-    // user 컬렉션에 유저를 저장
-    try {
-        await user.save();
-        return res.status(200).json({
-            success: true,
-        })
-    } catch (error){
-        console.error(error)
-    }
-})
-
-app.post('/login', (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
-        console.log('2')
-        if (err) {
-            return next(err);
-        }
-
-        if (!user) {
-            return res.json({ msg: info});
-        }
-
-        req.logIn(user, function (err) {
-            if (err) { return next(err); }
-            res.redirect('/');
-        });
-    })(req, res, next)
-})
-
-app.post('/logout', (req, res, next) => {
-    req.logout((err) => {
-        if (err) { return next(err); }
-        res.redirect('/login');
-    });
-});
+app.use('/auth', usersRouter);
 
 
-app.listen(PORT, () => {
-    console.log(`Listening on ${PORT}`);
+// listen
+app.listen(port, () => {
+    console.log(`Listening on ${port}`);
 })
