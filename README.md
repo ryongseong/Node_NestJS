@@ -10,4 +10,4 @@
 #### 2024.01.11(목) Part4. ch2. 05. 포스트맨 설치 ~ Part5. ch2. 07. 로그아웃 기능 만들기
 #### 2024.01.12(금) Part5. ch2. 08. 비밀번호를 데이터베이스에 저장하는 방법 ~ Part6. ch1. 06. CRUD 구현
 #### 2024.01.13(토) Part6. ch1. 07. Read 구현하기 ~ Part6. ch1. 09. Express 에러 처리
-#### 2024.01.15(월) Part6. ch2. 01. ORM에 대해서 ~ Part6. ch2. 10. Sequelize를 이용한 CRUD 구현
+#### 2024.01.15(월) Part6. ch2. 01. ORM에 대해서 ~ Part7. ch1. 16. Migrating to Apollo Server 4
