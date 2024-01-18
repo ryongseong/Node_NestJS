@@ -12,3 +12,4 @@
 #### 2024.01.13(토) Part6. ch1. 07. Read 구현하기 ~ Part6. ch1. 09. Express 에러 처리
 #### 2024.01.15(월) Part6. ch2. 01. ORM에 대해서 ~ Part8. ch1. 04. Socket IO
 #### 2024.01.17(수) Part8. ch1. 05. Socket io를 이용한 간단한 메시지 앱 생성하기 ~ Part8. ch2. 03. Socket io 연동하기
+#### 2024.01.18(목) Part8. ch2. 04. 몽고 DB 연동하기 ~ 
