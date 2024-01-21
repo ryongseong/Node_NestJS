@@ -2,7 +2,7 @@ const passport = require('passport');
 const User = require('../models/users.model');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const KaKaoStrategy = require('passport-kakao').Strategy;
+// const KaKaoStrategy = require('passport-kakao').Strategy;
 require('dotenv').config();
 
 const googleStrategyConfig = new GoogleStrategy({
@@ -19,6 +19,9 @@ const googleStrategyConfig = new GoogleStrategy({
         } else {
             const user = new User();
             user.email = profile.emails[0].value;
+            user.username = profile.displayName;
+            user.firstName= profile.name.givenName;
+            user.lastName = profile.name.familyName;
             user.googleId = profile.id;
     
             await user.save();
@@ -51,26 +54,26 @@ const localStrategyConfig = new LocalStrategy({
     }
 })
 
-const kakaoStrategyConfig = new KaKaoStrategy({
-    clientID: process.env.KAKAO_CLIENT_ID,
-    callbackURL: '/auth/kakao/callback'
-}, async (accessToken, refreshToken, profile, done) => {
-    try {
-        const existingUser = await User.findOne({kakaoId: profile.id});
+// const kakaoStrategyConfig = new KaKaoStrategy({
+//     clientID: process.env.KAKAO_CLIENT_ID,
+//     callbackURL: '/auth/kakao/callback'
+// }, async (accessToken, refreshToken, profile, done) => {
+//     try {
+//         const existingUser = await User.findOne({kakaoId: profile.id});
 
-        if (existingUser){
-            return done(null, existingUser);
-        } else {
-            const user = new User();
-            user.email = profile._json?.kakao_account.email;
-            user.kakaoId = profile.id;
-            await user.save();
-            done(null, user);
-        }
-    } catch (err) {
-        done(err);
-    }
-})
+//         if (existingUser){
+//             return done(null, existingUser);
+//         } else {
+//             const user = new User();
+//             user.email = profile._json?.kakao_account.email;
+//             user.kakaoId = profile.id;
+//             await user.save();
+//             done(null, user);
+//         }
+//     } catch (err) {
+//         done(err);
+//     }
+// })
 
 // req.login(user)
 passport.serializeUser((user, done) => {
@@ -87,4 +90,4 @@ passport.deserializeUser((id, done) => {
 
 passport.use('local', localStrategyConfig)
 passport.use('google', googleStrategyConfig)
-passport.use('kakao', kakaoStrategyConfig)
+// passport.use('kakao', kakaoStrategyConfig)

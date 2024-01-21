@@ -18,7 +18,7 @@ usersRouter.post('/login', (req, res, next) => {
 
         req.logIn(user, function (err) {
             if (err) { return next(err); }
-            res.redirect('/');
+            res.redirect('/posts');
         });
     })(req, res, next)
 })
@@ -36,7 +36,7 @@ usersRouter.post('/signup', async (req, res) => {
     try {
         await user.save();
         // 이메일 보내기
-        sendMail('ryongseong@example.com', 'ryongseong', 'welcome');
+        // sendMail('ryongseong@example.com', 'ryongseong', 'welcome');
         res.redirect('/login');
     } catch (error){
         console.error(error)
@@ -46,14 +46,14 @@ usersRouter.post('/signup', async (req, res) => {
 // get
 usersRouter.get('/google', passport.authenticate('google'));
 usersRouter.get('/google/callback', passport.authenticate('google', {
-    successReturnToOrRedirect: '/',
+    successReturnToOrRedirect: '/posts',
     failureRedirect: '/login'
 }));
 
-usersRouter.get('/kakao', passport.authenticate('kakao'));
-usersRouter.get('/kakao/callback', passport.authenticate('kakao', {
-    successRedirect: '/',
-    failureRedirect: '/login'
-}));
+// usersRouter.get('/kakao', passport.authenticate('kakao'));
+// usersRouter.get('/kakao/callback', passport.authenticate('kakao', {
+//     successRedirect: '/',
+//     failureRedirect: '/login'
+// }));
 
 module.exports = usersRouter;

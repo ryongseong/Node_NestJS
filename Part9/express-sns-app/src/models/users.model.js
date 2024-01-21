@@ -21,10 +21,11 @@ const userSchema = mongoose.Schema({
         unique: true,
         sparse: true
     },
-    kakaoId: {
-        type: String,
-        unique: true
-    },
+    // kakaoId: {
+    //     type: String,
+    //     unique: true,
+    //     sparse: true
+    // },
     username: {
         type: String,
         required: true,

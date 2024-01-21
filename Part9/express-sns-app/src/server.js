@@ -5,6 +5,8 @@ const {default : mongoose} = require('mongoose');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 const config = require('config');
+const flash = require('connect-flash');
+const methodOverride = require('method-override');
 
 // Router
 const mainRouter = require('./routers/main.router');
@@ -48,6 +50,9 @@ app.use(function (request, response, next) {
     }
     next()
 })
+app.use(flash());
+app.use(methodOverride('_method'));
+
     
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -61,6 +66,13 @@ async function dbConnect() {
   await mongoose.connect(process.env.MONGO_URI);
 }
 
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success');
+    next();
+})
+
 app.use('/', mainRouter);
 app.use('/auth', usersRouter);
 app.use("/posts", postsRouter);
@@ -68,6 +80,21 @@ app.use("/posts/:id/comments", commentsRouter);
 app.use("/profile/:id", profileRouter);
 app.use("/friends", friendsRouter);
 app.use(likeRouter);
+
+app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.send(err.message || 'Error!!');
+})
+
+app.get('/send', (req, res) => {
+    req.flash('post success', '포스트가 생성되었습니다.');
+    req.flash('post failed', '포스트가 생성이 실패했습니다.');
+    res.redirect('/receive');
+})
+
+app.get('/receive', (req, res) => {
+    res.send(req.flash('post success')[0]);
+})
 
 
 // listen
