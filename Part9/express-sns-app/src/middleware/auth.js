@@ -1,4 +1,5 @@
 const Post = require('../models/posts.model')
+const User = require('../models/users.model')
 const Comment = require('../models/comments.model')
 
 function checkAuthenticated(req, res, next) {
@@ -62,9 +63,31 @@ function checkCommentOwnership(req, res, next) {
     }
 }
 
+function checkIsMe(req, res, next) {
+    if (req.isAuthenticated()) {
+        User.findById(req.params.id, (err, user) => {
+            if (err || !user) {
+                req.flash('error', '유저를 찾는데 에러가 발생했습니다.');
+                res.redirect('/profile/' + req.params.id);
+            } else {
+                if (user._id.equals(req.user._id)) {
+                    next();
+                } else {
+                    req.flash('error', '권한이 없습니다.');
+                    res.redirect('/profile/' + req.params.id);
+                }
+            }
+        })
+    } else {
+        req.flash('error', '먼저 로그인을 해주세요.');
+        res.redirect('/login');
+    }
+}
+
 module.exports = {
     checkAuthenticated,
     checkNotAuthenticated,
     checkPostOwnership,
-    checkCommentOwnership
+    checkCommentOwnership,
+    checkIsMe
 }

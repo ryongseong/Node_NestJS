@@ -18,12 +18,10 @@ const storageEngine = multer.diskStorage({
 const upload = multer({ storage: storageEngine}).single('image');
 
 router.post('/', checkAuthenticated, upload, (req, res, next) => {
-    let name = req.body.name;
     let desc = req.body.desc;
     let image = req.file ? req.file.filename: "";
 
     Post.create({
-        name: name,
         image: image,
         description: desc,
         author: {
