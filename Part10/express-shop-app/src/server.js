@@ -7,6 +7,7 @@ const path = require('path');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const fileUpload = require('express-fileupload');
+const session = require('express-session');
 
 const config = require('config');
 const serverConfig = config.get('server');
@@ -18,31 +19,43 @@ const cartRouter = require('./routes/cart.router');
 const adminCategoriesRouter = require('./routes/admin-categories.router');
 const adminProductsRouter = require('./routes/admin-products.router');
 
-
-
 const port = serverConfig.port;
 
 require('dotenv').config()
 
-app.use(cookieSession({
-    name: 'cookie-session-name',
-    keys: [process.env.COOKIE_ENCRYPTION_KEY]
-}))
+// // 개발 중에는 cookieSession을 사용하는 것이 좋음
+// app.use(cookieSession({
+//     name: 'cookie-session-name',
+//     keys: [process.env.COOKIE_ENCRYPTION_KEY]
+// }))
 
-// register regenerate & save after the cookieSession middleware initialization
-app.use(function (request, response, next) {
-    if (request.session && !request.session.regenerate) {
-        request.session.regenerate = (cb) => {
-            cb()
-        }
-    }
-    if (request.session && !request.session.save) {
-        request.session.save = (cb) => {
-            cb()
-        }
-    }
-    next()
-})
+// // register regenerate & save after the cookieSession middleware initialization
+// app.use(function (request, response, next) {
+//     if (request.session && !request.session.regenerate) {
+//         request.session.regenerate = (cb) => {
+//             cb()
+//         }
+//     }
+//     if (request.session && !request.session.save) {
+//         request.session.save = (cb) => {
+//             cb()
+//         }
+//     }
+//     next()
+// })
+
+// 개발 끝날 때 쯤 express-session으로 변경하는 것이 좋음
+app.use(session({
+    secret: process.env.COOKIE_ENCRYPTION_KEY,
+    cookie: {
+        httpOnly: true,
+        // https를 사용할 때는 secure true 부여.
+        secure: false
+    },
+    name: 'shop-app-cookie',
+    resave: false,
+    saveUninitialized: false
+}))
 
 app.use(flash());
 app.use(methodOverride('_method'));
@@ -70,6 +83,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
+    res.locals.cart = req.session.cart;
     res.locals.error = req.flash('error');
     res.locals.success = req.flash('success');
     res.locals.currentUser = req.user;
