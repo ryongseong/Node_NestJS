@@ -1,0 +1,37 @@
+
+# 게시글 전체 가져오기
+GET http://localhost:3000/board
+
+###
+
+# 게시글 하나 가져오기
+GET http://localhost:3000/board/1
+
+###
+
+# 게시물 생성
+POST http://localhost:3000/board
+content-type: application/json
+
+{
+    "name" : "FastCapmus hello world",
+    "content" : "world"
+}
+
+###
+
+# 게시물 수정
+PUT http://localhost:3000/board/4
+content-type: application/json
+
+{
+    "name" : "Fast Campus"
+}
+
+###
+
+# 게시글 삭제
+DELETE http://localhost:3000/board/1
+
+###
+GET http://localhost:3000
