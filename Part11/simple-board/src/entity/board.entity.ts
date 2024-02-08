@@ -6,7 +6,7 @@ import { User } from "./user.entity";
 
 @Entity()
 export class Board {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ name: 'id'})
     id: number;
 
     @ApiProperty({ description: '유저_ID' })

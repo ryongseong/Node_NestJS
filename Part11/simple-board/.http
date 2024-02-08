@@ -12,26 +12,81 @@ GET http://localhost:3000/board/1
 # 게시물 생성
 POST http://localhost:3000/board
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJmYXN0Y2FtcHVzMjAyMyIsIm5hbWUiOiJmYXN0Y2FtcHVzbmFtZTIiLCJpYXQiOjE3MDczNzc4MzksImV4cCI6MTcwNzM4MTQzOX0.LSqPapXDSaKN1pymveLMVNNjwyzzhpjZnppQzBunL88
 
 {
-    "name" : "FastCapmus hello world",
-    "content" : "world"
+    "content" : "new APi"
 }
 
 ###
 
 # 게시물 수정
-PUT http://localhost:3000/board/4
+PUT http://localhost:3000/board/13
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJmYXN0Y2FtcHVzMjAyMyIsIm5hbWUiOiJmYXN0Y2FtcHVzbmFtZTIiLCJpYXQiOjE3MDczNzc4MzksImV4cCI6MTcwNzM4MTQzOX0.LSqPapXDSaKN1pymveLMVNNjwyzzhpjZnppQzBunL88
 
 {
-    "name" : "Fast Campus"
+    "content" : "Fast Campus"
 }
 
 ###
 
 # 게시글 삭제
-DELETE http://localhost:3000/board/1
+DELETE http://localhost:3000/board/13
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJmYXN0Y2FtcHVzMjAyMyIsIm5hbWUiOiJmYXN0Y2FtcHVzbmFtZTIiLCJpYXQiOjE3MDczNzc4MzksImV4cCI6MTcwNzM4MTQzOX0.LSqPapXDSaKN1pymveLMVNNjwyzzhpjZnppQzBunL88
 
 ###
 GET http://localhost:3000
+
+###
+
+# 유저 리스트 가져오기
+GET http://localhost:3000/user
+
+###
+
+# 유저 회원가입
+POST http://localhost:3000/user
+content-type: application/json
+
+{
+    "username" : "fastcampus2023",
+    "name" : "fastcampusname2",
+    "password" : "fastcampuspassword"
+}
+
+###
+
+# 유저 로그인
+POST http://localhost:3000/user/login
+content-type: application/json
+
+{
+    "username" : "fastcampus2023",
+    "password" : "fastcampuspassword"
+}
+
+###
+
+# 유저 로그인 (passport)
+POST http://localhost:3000/login
+content-type: application/json
+
+{
+    "username" : "fastcampus2023",
+    "password" : "fastcampuspassword"
+}
+
+###
+
+# 유저 로그인 (me)
+GET  http://localhost:3000/me
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJmYXN0Y2FtcHVzMjAyMyIsIm5hbWUiOiJmYXN0Y2FtcHVzbmFtZTIiLCJpYXQiOjE3MDczNzc4MzksImV4cCI6MTcwNzM4MTQzOX0.LSqPapXDSaKN1pymveLMVNNjwyzzhpjZnppQzBunL88
+
+{
+    "username" : "fastcampus2023",
+    "password" : "fastcampuspassword"
+}
+
+###

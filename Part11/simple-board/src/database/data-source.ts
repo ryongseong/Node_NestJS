@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { DataSource } from "typeorm";
-import {config} from 'dotenv';
-
+import {DataSource} from 'typeorm';
+import { config } from 'dotenv';
 config({path: '.env.local'});
 
 export default new DataSource({
@@ -14,4 +13,4 @@ export default new DataSource({
     entities: ['src/**/*.entity{.ts,.js}'],
     migrations: ['src/database/migrations/*.ts'],
     migrationsTableName: 'migrations'
-})
+});
