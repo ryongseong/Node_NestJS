@@ -20,3 +20,4 @@
 #### 2024.02.05(월) Part11. ch3. 08. Module 생성 ~ Part11. ch5. 06. TypeORM Seeding을 통한 초기 데이터 생성
 #### 2024.02.07(수) Part11. ch5. 07. TypeORM 기반으로 게시글 가져오기 수정 ~ Part11. ch6. 07. 로그인 - 인증 토큰 생성하기 (JWT)
 #### 2024.02.08(목) Part11. ch6. 08. 로그인 - Passport 적용한 로그인 구현 ~ Part12. ch1
+#### 2024.02.10(토) Part12. ch2 ~ Part12. ch04
