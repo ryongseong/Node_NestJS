@@ -1,14 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { SigninReqDto, SignupReqDto } from './dto/req.dto';
-import { SigninResDto, SignupResDto } from './dto/res.dto';
+import { RefreshResDto, SigninResDto, SignupResDto } from './dto/res.dto';
 import { ApiPostResponse } from 'src/common/decorator/swagger.decorator';
 import { Public } from 'src/common/decorator/public.decorator';
+import { User, UserAfterAuth } from 'src/common/decorator/user.decorator';
 
 @ApiTags('Auth')
-@ApiExtraModels(SignupResDto, SigninResDto)
+@ApiExtraModels(SignupResDto, SigninResDto, RefreshResDto)
 @Controller('api/auth')
 export class AuthController {
   constructor(
@@ -29,5 +30,14 @@ export class AuthController {
   @Public()
   async signin(@Body() { email, password }: SigninReqDto) {
     return this.authService.signin(email, password);
+  }
+
+  @Post('refresh')
+  @ApiPostResponse(RefreshResDto)
+  @ApiBearerAuth()
+  async refresh(@Headers('authorization') authorization, @User() user: UserAfterAuth) {
+    const token = /Bearer\s(.+)/.exec(authorization)[1];
+    const { accessToken, refreshToken } = await this.authService.refresh(token, user.id);
+    return { accessToken, refreshToken };
   }
 }
