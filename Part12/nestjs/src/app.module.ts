@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { UserModule } from './user/user.module';
@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import postgresConfig from './config/postgres.config';
 import jwtConfig from './config/jwt.config';
+import { LoggerMiddleWare } from './common/middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -25,11 +26,10 @@ import jwtConfig from './config/jwt.config';
           password: configService.get('postgres.password'),
           database: configService.get('postgres.database'),
           autoLoadEntities: true,
+          synchronize: false,
         };
         if (configService.get('STAGE') == 'local') {
-          console.log('Sync postgres');
           obj = Object.assign(obj, {
-            synchronize: true,
             logging: true,
           });
         }
@@ -41,5 +41,10 @@ import jwtConfig from './config/jwt.config';
     VideoModule,
     AnalyticsModule,
   ],
+  providers: [Logger],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleWare).forRoutes('*');
+  }
+}

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Controller, Post, Body, BadRequestException, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
@@ -12,19 +11,17 @@ import { User, UserAfterAuth } from 'src/common/decorator/user.decorator';
 @ApiExtraModels(SignupResDto, SigninResDto, RefreshResDto)
 @Controller('api/auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Post('signup')
   @ApiPostResponse(SignupResDto)
   @Public()
-  async signup(@Body() { email, password, passwordConfirm }: SignupReqDto) {
+  async signup(@Body() { email, password, passwordConfirm }: SignupReqDto): Promise<SignupResDto> {
     if (password !== passwordConfirm) throw new BadRequestException();
-    const { id } = await this.authService.signup(email, password);
-    return { id };
+    const { id, accessToken, refreshToken } = await this.authService.signup(email, password);
+    return { id, accessToken, refreshToken };
   }
-  
+
   @Post('signin')
   @ApiPostResponse(SigninResDto)
   @Public()

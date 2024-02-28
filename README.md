@@ -22,4 +22,5 @@
 #### 2024.02.08(목) Part11. ch6. 08. 로그인 - Passport 적용한 로그인 구현 ~ Part12. ch1
 #### 2024.02.10(토) Part12. ch2 ~ Part12. ch04
 #### 2024.02.17(토) Part12. ch5. 01. Authentication, Authorization 개념 ~ Part12. ch5. 03. 슬라이딩 세션과 리프래쉬 토큰 구현 2
-#### 2021.02.26(월) Part12. ch5. 04. 메타데이터의 개념 ~ 
+#### 2024.02.26(월) Part12. ch5. 04. 메타데이터의 개념 ~ ch06.01. Middleware와 Interceptor 개념, 로깅 기능
+#### 2024.02.28(수) Part12. ch6. 02. nest-winstion을 활용한 로깅 ~ Part12. ch7. 04. 쿼리 분석 및 개선 1

@@ -1,11 +1,26 @@
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerCustomOptions, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { WinstonModule, utilities } from 'nest-winston';
+import * as winston from 'winston';
+import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 
 async function bootstrap() {
   const port = 8080;
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      transports: [
+        new winston.transports.Console({
+          level: process.env.STAGE === 'prod' ? 'info' : 'debug',
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            utilities.format.nestLike('NestJS', { prettyPrint: true }),
+          ),
+        }),
+      ],
+    }),
+  });
 
   // Swagger
   const config = new DocumentBuilder()
@@ -30,8 +45,10 @@ async function bootstrap() {
     }),
   );
 
+  app.useGlobalInterceptors(new TransformInterceptor());
+
   await app.listen(port);
-  console.info(`STAGE: ${process.env.STAGE}`);
-  console.info(`listening on port ${port}`);
+  Logger.log(`listening on port ${port}`);
+  Logger.log(`STAGE: ${process.env.STAGE}`);
 }
 bootstrap();
