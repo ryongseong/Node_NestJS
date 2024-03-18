@@ -7,6 +7,8 @@ import { PageReqDto } from 'src/common/dto/req.dto';
 import { ApiGetItemsResponse, ApiGetResponse, ApiPostResponse } from 'src/common/decorator/swagger.decorator';
 import { CreateVideoResDto, FindVideoResDto } from './dto/res.dto';
 import { PageResDto } from 'src/common/dto/res.dto';
+import { User, UserAfterAuth } from 'src/common/decorator/user.decorator';
+import { CreateVideoCommand } from './command/create-video.command';
 
 @ApiTags('Video')
 @ApiExtraModels(FindVideoReqDto, FindVideoResDto, PageReqDto, CreateVideoResDto, PageResDto)
@@ -17,8 +19,9 @@ export class VideoController {
   @Post()
   @ApiPostResponse(CreateVideoResDto)
   @ApiBearerAuth()
-  upload(@Body() createVieoReqDto: CreateVideoReqDto) {
-    return this.videoService.create();
+  upload(@Body() createVideoReqDto: CreateVideoReqDto, @User() user: UserAfterAuth) {
+    const { title, video } = createVideoReqDto;
+    const command = new CreateVideoCommand(user.id, title, 'video/mp4', 'mp4', Buffer.from(''));
   }
   
   @Get()

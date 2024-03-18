@@ -1,3 +1,3 @@
 export default () => ({
-    ENVIRONMENT: process.env.ENVIRONMENT,
+  ENVIRONMENT: process.env.ENVIRONMENT,
 });

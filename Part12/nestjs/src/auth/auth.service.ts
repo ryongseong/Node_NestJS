@@ -5,6 +5,7 @@ import { UserService } from 'src/user/user.service';
 import { RefreshToken } from './entity/refresh-token.entity';
 import { DataSource, Repository } from 'typeorm';
 import { User } from 'src/user/entity/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +30,9 @@ export class AuthService {
       const user = await this.userService.findOneByEmail(email);
       if (user) throw new BadRequestException();
 
-      const userEntity = queryRunner.manager.create(User, { email, password });
+      const saltRounds = 10;
+      const hash = await bcrypt.hash(password, saltRounds);
+      const userEntity = queryRunner.manager.create(User, { email, password: hash });
       await queryRunner.manager.save(userEntity);
 
       const accessToken = this.generateAccessToken(userEntity.id);

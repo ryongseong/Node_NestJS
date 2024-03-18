@@ -1,4 +1,4 @@
-import { DataSource } from "typeorm";
+import { DataSource } from 'typeorm';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
